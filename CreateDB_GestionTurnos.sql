@@ -35,14 +35,16 @@ CREATE TABLE Empleados (
     IdEmpleado INT PRIMARY KEY,
     Nombre NVARCHAR(50),
 	Apellido NVARCHAR(50),
-    Especialidad NVARCHAR(100),
+    IdServicio INT,
     FechaAltaEmpleado DATE,
 	IdRol INT,
 
-	FOREIGN KEY (IdRol) REFERENCES GestionDeRoles(IdRol)
+	FOREIGN KEY (IdRol) REFERENCES GestionDeRoles(IdRol),
+	FOREIGN KEY (IdServicio) REFERENCES Servicios(IdServicio)
+);
 
 CREATE TABLE Turnos (
-    IdTurno INT PRIMARY KEY,
+    IdTurno INT PRIMARY KEY IDENTITY(1,1),
 	IdCliente INT,
 	IdServicio INT,
 	IdEmpleado INT,
