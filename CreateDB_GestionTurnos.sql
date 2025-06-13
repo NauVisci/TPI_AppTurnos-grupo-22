@@ -9,6 +9,7 @@ CREATE TABLE Servicios (
     Nombre NVARCHAR(255),
     Duracion DECIMAL(10, 2),
     Precio DECIMAL(10, 2)
+    Categoria NVARCHAR(100);
 );
 
 CREATE TABLE GestionDeRoles (
