@@ -8,8 +8,8 @@ CREATE TABLE Servicios (
     IdServicio INT PRIMARY KEY,
     Nombre NVARCHAR(255),
     Duracion DECIMAL(10, 2),
-    Precio DECIMAL(10, 2)
-    Categoria NVARCHAR(100);
+    Precio DECIMAL(10, 2),
+    Categoria NVARCHAR(100)
 );
 
 CREATE TABLE GestionDeRoles (
@@ -48,6 +48,8 @@ CREATE TABLE Turnos (
 	IdEmpleado INT,
     ProfesionalElegido NVARCHAR(255),
     Estado NVARCHAR(50),
+    FechaTurno DATE,
+    HoraTurno TIME,
     FechaCreacion DATETIME DEFAULT GETDATE(),
     Observaciones NVARCHAR(500),
     Valoracion DECIMAL(4, 2)
