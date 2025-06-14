@@ -153,3 +153,26 @@ BEGIN
 END;
 
 -------------------- EJEMPLOS TR_ACTUALIZACION_ESTADISTICAS_EMPLEADO:
+--1
+-- Insertar un turno completado para el empleado con ID 1
+
+--INSERT INTO Turnos (IdTurno, IdCliente, IdServicio, IdEmpleado, ProfesionalElegido, Estado, Fecha, Valoracion)
+--VALUES (27, 5, 3, 1, 'María Gómez', 'Completado', '2023-09-07 11:00:00', 4.8);
+
+-- El trigger actualizará automáticamente las estadísticas de María Gómez:
+-- - Incrementará TurnosAtendidos
+-- - Sumará $2800 a IngresosGenerados (precio del servicio 3)
+-- - Recalculará el promedio de valoraciones
+-- - Incrementará el contador de turnos del último mes
+
+--2
+-- Actualizar un turno pendiente a completado
+
+--UPDATE Turnos 
+--SET Estado = 'Confirmado' 
+--WHERE IdTurno = 11;
+
+-- El trigger:
+-- 1. Detecta que el empleado (ID 6) tuvo un cambio relevante
+-- 2. Recalcula todas sus estadísticas
+-- 3. Actualiza la tabla Estadisticas con los nuevos valores

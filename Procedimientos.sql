@@ -41,9 +41,24 @@ BEGIN
 END;
 
 -------------------- EJEMPLOS SP_ESTADISTICAS_EMPLEADO:
+--1
+--Estadísticas de un empleado específico (ID 1) en septiembre 2023:
+--EXEC SP_ESTADISTICAS_EMPLEADO 
+--    @IdEmpleado = 1, 
+--    @FechaDesde = '2023-09-01', 
+--    @FechaHasta = '2023-09-30';
 
+--2
+--Comparativa de todos los empleados en el último trimestre:
+--EXEC SP_ESTADISTICAS_EMPLEADO
+--    @FechaDesde = '2023-07-01',
+--    @FechaHasta = '2023-09-30';
 
-
+--3
+--Análisis de la primera quincena de septiembre:
+--EXEC SP_ESTADISTICAS_EMPLEADO
+--    @FechaDesde = '2023-09-01',
+--    @FechaHasta = '2023-09-15';
 -----------------------------------------------------------
 
 -- PROCEDIMIENTO 2 SP_ESTADISTICAS_EMPLEADO:
