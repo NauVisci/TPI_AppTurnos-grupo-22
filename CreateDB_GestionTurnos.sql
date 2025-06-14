@@ -6,15 +6,15 @@ GO
 
 CREATE TABLE Servicios (
     IdServicio INT PRIMARY KEY,
-    Nombre NVARCHAR(255),
+    Nombre NVARCHAR(255), -- 1. Corte, 2. Planchado, 3. Tintura, 4. Barba
     Duracion DECIMAL(10, 2),
     Precio DECIMAL(10, 2),
     Categoria NVARCHAR(100)
 );
 
 CREATE TABLE GestionDeRoles (
-    IdRol INT PRIMARY KEY,
-    NombreRol NVARCHAR(255)
+    IdRol INT PRIMARY KEY, 
+    NombreRol NVARCHAR(255) -- 1. Admin, 2. Empleado, 3. Cliente
 );
 
 CREATE TABLE Clientes (
@@ -67,7 +67,7 @@ CREATE TABLE Estadisticas (
     TurnosAtendidos INT,
     IngresosGenerados DECIMAL(10,2),
 	PromedioCalificacion DECIMAL(4, 2),
-	PromedioTurnosMes INT, -- TIENE QUE SER INT EL TIPO DE DATO, ANTERIOR DECIMAL
+	PromedioTurnosMes INT,
 
 	FOREIGN KEY (IdEmpleado) REFERENCES Empleados(IdEmpleado),
 );
@@ -75,9 +75,9 @@ CREATE TABLE Estadisticas (
 CREATE TABLE HorariosEmpleado (
     IdHorario INT PRIMARY KEY IDENTITY(1,1),
     IdEmpleado INT,
-    DiaSemana INT, -- 1 Lunes, 6 Sábado
-    HoraInicio TIME,
-    HoraFin TIME,
+    DiaSemana INT, -- 1 Lunes, 2 martes, 3 miercoles, 4 jueves, 5 viernes, 6 Sábado, 7 sabado
+    HoraInicio TIME, -- todos comienzan a las 09:00 am
+    HoraFin TIME, -- todos teminan a las 20:00 pm
     Activo BIT DEFAULT 1,
     FOREIGN KEY (IdEmpleado) REFERENCES Empleados(IdEmpleado)
 );
