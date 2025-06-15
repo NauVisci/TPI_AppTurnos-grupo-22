@@ -1,5 +1,4 @@
--- PROCEDIMIENTOS ALMACENADOS
-
+USE GestionTurnos
 
 -- PROCEDIMIENTO 3: SP_ACTUALIZAR_HORARIO
 -- Gestiona la actualización de horarios de trabajo de empleados con validaciones de negocio. 

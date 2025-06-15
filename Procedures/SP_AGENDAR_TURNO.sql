@@ -1,9 +1,13 @@
 USE GestionTurnos
 
--- PROCEDIMIENTO ALMACENADO: AGENDAR TURNO
+-- PROCEDIMIENTO 1 SP_AGENDAR_TURNO:
+-- Encapsula y realiza todo el proceso de registro de un nuevo turno con validaciones completas. 
+-- Valida que el turno sea solo en fechas futuras, horarios laborales (martes a sábado, 8-20hs), 
+-- disponibilidad de empleados y asigna automáticamente un empleado si no se especifica. 
+-- Maneja transacciones con rollback automático en caso de error y retorna información completa del turno 
+-- creado y también incluye manejo robusto de excepciones con mensajes específicos para cada tipo de validación fallida.
 
-CREATE PROCEDURE SP_AgendarTurno (
-	@IdCliente int, @IdServicio INT, @IdEmpleado INT = NULL,@FechaTurno DATE, @HoraTurno TIME )
+CREATE PROCEDURE SP_AGENDAR_TURNO (@IdCliente int, @IdServicio INT, @IdEmpleado INT = NULL,@FechaTurno DATE, @HoraTurno TIME)
 AS BEGIN
 	
 	SET NOCOUNT ON; 
@@ -15,15 +19,11 @@ AS BEGIN
 	BEGIN TRY 
 		BEGIN TRANSACTION;
 
-        -- Validaci�n: fecha y hora deben ser futuras
         IF (CAST(@FechaTurno AS DATETIME) + CAST(@HoraTurno AS DATETIME)) <= GETDATE()
         BEGIN 
             SET @Error = 'No puedes reservar turnos en tiempo pasado';
             THROW 60001, @Error, 1;
         END
-
-
-		--Validacion para sacar turnos los dias de atencion, martes a sabado
 
 		IF DATEPART(WEEKDAY, @FechaTurno) = 1 OR DATEPART(WEEKDAY, @FechaTurno) = 2
 
@@ -32,16 +32,12 @@ AS BEGIN
 				THROW 60002, @Error, 1;
 			END
 
-        -- Validaci�n: turno entre 8:00 y 20:00
         IF @HoraTurno < '08:00:00' OR @HoraTurno >= '20:00:00'
         BEGIN 
             SET @Error = 'Los turnos solo se pueden agendar de 8:00 a 19:59 horas';
             THROW 60003, @Error, 1;
         END
 
-
-		-- asignacion de empleado
-			
 		IF @IdEmpleado IS NULL
 		BEGIN
 			SELECT TOP 1 
@@ -75,24 +71,17 @@ AS BEGIN
 			WHERE IdEmpleado = @IdEmpleado;
 		END
 
-
-		-- Validar que el empleado este disponible
-
         IF EXISTS (
             SELECT 1 FROM Turnos
             WHERE IdEmpleado = @IdEmpleado
                 AND FechaTurno = @FechaTurno
                 AND HoraTurno = @HoraTurno
                 AND Estado IN ('Confirmado','Pendiente')
-				--AND Estado IN ('Confirmado','Completado')
         )
         BEGIN 
             SET @Error = 'Empleado no disponible en ese horario';
             THROW 60004, @Error, 1;
         END
-
-		-- Insertar el turno 
-
 		
 		INSERT INTO Turnos (
 			IdCliente, IdServicio, IdEmpleado, ProfesionalElegido,
@@ -106,9 +95,6 @@ AS BEGIN
         SET @IdTurnoNuevo = SCOPE_IDENTITY();
 
         COMMIT TRANSACTION;
-
-
-		-- Retornar info del turno creado
 
         SELECT  
             T.IdTurno,

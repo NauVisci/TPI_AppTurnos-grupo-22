@@ -1,4 +1,6 @@
--- PROCEDIMIENTO: SP_ESTADISTICAS_EMPLEADO
+USE GestionTurnos
+
+-- PROCEDIMIENTO 2 SP_ESTADISTICAS_EMPLEADO
 -- Calcula estadisticas de rendimiento detalladas por empleado en un rango de fechas especifico. Si no se proporcionan fechas, usa el mes actual 
 -- por defecto. Genera metricas completas: turnos totales, completados, cancelados, ingresos generados, promedio de calificaciones y promedio de turnos 
 -- por dia. Permite consultar un empleado especifico o todos los empleados, ordenando resultados por ingresos generados para identificar empleados mas 
@@ -11,7 +13,6 @@ CREATE PROCEDURE SP_ESTADISTICAS_EMPLEADO
 AS
 BEGIN
     SET NOCOUNT ON;
-    
     -- Si no se especifican fechas, usar el mes actual
     IF @FechaDesde IS NULL
         SET @FechaDesde = DATEFROMPARTS(YEAR(GETDATE()), MONTH(GETDATE()), 1);
@@ -40,20 +41,20 @@ END;
 
 -------------------- EJEMPLOS SP_ESTADISTICAS_EMPLEADO:
 --1
---Estadísticas de un empleado específico (ID 1) en septiembre 2023:
+--Estadï¿½sticas de un empleado especï¿½fico (ID 1) en septiembre 2023:
 --EXEC SP_ESTADISTICAS_EMPLEADO 
 --    @IdEmpleado = 1, 
 --    @FechaDesde = '2023-09-01', 
 --    @FechaHasta = '2023-09-30';
 
 --2
---Comparativa de todos los empleados en el último trimestre:
+--Comparativa de todos los empleados en el ï¿½ltimo trimestre:
 --EXEC SP_ESTADISTICAS_EMPLEADO
 --    @FechaDesde = '2023-07-01',
 --    @FechaHasta = '2023-09-30';
 
 --3
---Análisis de la primera quincena de septiembre:
+--Anï¿½lisis de la primera quincena de septiembre:
 --EXEC SP_ESTADISTICAS_EMPLEADO
 --    @FechaDesde = '2023-09-01',
 --    @FechaHasta = '2023-09-15';

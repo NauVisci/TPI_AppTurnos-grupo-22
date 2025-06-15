@@ -1,4 +1,6 @@
-﻿-- TRIGGER 3 TR_ACTUALIZACION_ESTADISTICAS_EMPLEADO:
+﻿USE GestionTurnos
+
+-- TRIGGER 3 TR_ACTUALIZACION_ESTADISTICAS_EMPLEADO:
 -- Actualiza métricas de rendimiento cuando se crea o completa un turno. 
 -- Se ejecuta en INSERT y UPDATE de Turnos para empleados con turnos completados o cancelados. 
 -- Calcula y actualiza estadísticas en tiempo real de turnos atendidos, ingresos generados, promedio de calificaciones y promedio mensual de turnos. 
@@ -12,14 +14,12 @@ BEGIN
     SET NOCOUNT ON;
 
     BEGIN TRY
-        -- Tabla temporal para empleados afectados
         DECLARE @EmpleadosAfectados3 TABLE (IdEmpleado INT);
         INSERT INTO @EmpleadosAfectados3 (IdEmpleado)
         SELECT DISTINCT IdEmpleado
         FROM INSERTED
         WHERE Estado IN ('Completado', 'Cancelado');
 
-        -- Tabla temporal para estad�sticas calculadas
         DECLARE @datos TABLE (
             IdEmpleado INT,
             TurnosCompletados INT,
@@ -28,7 +28,6 @@ BEGIN
             PromedioMensual INT
         );
 
-        -- Calcular estad�sticas y almacenar en @datos
         INSERT INTO @datos
         SELECT 
             t.IdEmpleado,
@@ -41,7 +40,6 @@ BEGIN
         WHERE t.IdEmpleado IN (SELECT IdEmpleado FROM @EmpleadosAfectados3)
         GROUP BY t.IdEmpleado;
 
-        -- Actualizar estad�sticas existentes
         UPDATE est
         SET 
             TurnosAtendidos = d.TurnosCompletados,
@@ -51,7 +49,6 @@ BEGIN
         FROM Estadisticas est
         INNER JOIN @datos d ON est.IdEmpleado = d.IdEmpleado;
 
-        -- Insertar estad�sticas si no existen
         INSERT INTO Estadisticas (IdEmpleado, TurnosAtendidos, IngresosGenerados, PromedioCalificacion, PromedioTurnosMes)
         SELECT 
             d.IdEmpleado,
@@ -66,12 +63,8 @@ BEGIN
         
     END TRY
     BEGIN CATCH
-        -- Captura de error
         DECLARE @ErrorMessage NVARCHAR(4000), @ErrorSeverity INT, @ErrorState INT;
-        SELECT 
-            @ErrorMessage = ERROR_MESSAGE(),
-            @ErrorSeverity = ERROR_SEVERITY(),
-            @ErrorState = ERROR_STATE();
+        SELECT @ErrorMessage = ERROR_MESSAGE(), @ErrorSeverity = ERROR_SEVERITY(), @ErrorState = ERROR_STATE();
         RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
     END CATCH
 END;

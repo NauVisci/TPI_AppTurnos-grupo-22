@@ -1,9 +1,11 @@
-﻿-- VISTA 2 VISTA_GESTION_DE_TURNOS:
+﻿USE GestionTurnos
+
+-- VISTA 2 Vw_GESTION_DE_TURNOS:
 -- Vista de panel de control administrativo para supervisar y gestionar todos los turnos del negocio, centraliza información completa de 
 -- turnos desde múltiples tablas relacionadas. El usuario objetivo de esta vista son los administradores y personal de gestión.
 -- Caso de uso: Un administrador revisa los turnos del día, confirma citas, contacta clientes para recordatorios y actualiza el estado de servicios completados.
 
-CREATE VIEW VISTA_GESTION_DE_TURNOS AS
+CREATE VIEW VW_GESTION_DE_TURNOS AS
 SELECT 
     t.IdTurno,
     c.Nombre + ' ' + c.Apellido AS NombreCompleto,

@@ -1,24 +1,10 @@
--- TRIGGERS
-
--- TRIGGER 1 TR_RECORDATORIO_TURNO:
--- Se ejecuta cuando se confirma una nueva cita, para enviar notificación al cliente. 
--- Se activa en INSERT y UPDATE de la tabla Turnos, específicamente cuando el estado cambia a “Confirmado”. 
--- Crea registros en la tabla NotificacionesTurno simulando el envío de emails y genera logs de auditoría para seguimiento. 
--- Solo procesa cambios de estado hacia “Confirmado” para evitar notificaciones duplicadas.
-
-
--------------------- EJEMPLOS TR_RECORDATORIO_TURNO:
-
-
-
------------------------------------------------------------
+USE GestionTurnos
 
 -- TRIGGER 2 TR_ACTUALIZACION_TURNOS:
 -- Se ejecuta cuando se modifica la disponibilidad horaria de empleados para actualizar automáticamente los turnos afectados, 
 -- se activa en INSERT, UPDATE y DELETE de HorariosEmpleado.
 -- Cancela automáticamente turnos futuros que quedan fuera del nuevo horario laboral, actualizando su estado a “Cancelado” y agregando observaciones
 -- explicativas. Nos garantiza consistencia entre horarios de empleados y turnos programados evitando futuros overlaps o turnos en horarios que ya no son correctos.
-
 
 CREATE TRIGGER TR_ACTUALIZACION_TURNOS
 ON HorariosEmpleado
@@ -71,6 +57,3 @@ GO
 -- INNER JOIN Empleados e ON t.IdEmpleado = e.IdEmpleado
 -- WHERE t.IdEmpleado = 1 AND t.Estado = 'Cancelado'
 -- ORDER BY t.FechaTurno;
-
------------------------------------------------------------
-

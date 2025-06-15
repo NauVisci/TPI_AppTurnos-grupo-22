@@ -1,58 +1,12 @@
--- VISTAS
+USE GestionTurnos
 
--- VISTA 1 VISTA_TURNOS_DISPONIBLES:
--- Vista principal para que los clientes visualicen la disponibilidad de turnos en tiempo real. 
--- Combina la información de los empleados (horarios laborales, servicios disponibles, si está activo o no) y 
--- presenta horarios en formato legible con nombres de días de la semana para mostrar la información esencial para la toma de decisiones.
--- Caso de uso: Un cliente accede al sistema y consulta esta vista para ver qué empleados están disponibles el martes por la tarde para un servicio de corte de cabello.
-
-CREATE VIEW VISTA_TURNOS_DISPONIBLES AS
-SELECT 
-    e.IdEmpleado, 
-    e.Nombre AS NombreEmpleado, 
-    h.DiaSemana,
-    CASE h.DiaSemana WHEN 1 THEN 'Lunes' WHEN 2 THEN 'Martes' WHEN 3 THEN 'Miércoles' WHEN 4 THEN 'Jueves' WHEN 5 THEN 'Viernes' WHEN 6 THEN 'Sábado' END AS NombreDia, 
-    h.HoraInicio, 
-    h.HoraFin, 
-    s.IdServicio, 
-    s.Nombre AS NombreServicio, 
-    s.Duracion, 
-    s.Precio
-FROM Empleados e
-INNER JOIN HorariosEmpleado h ON e.IdEmpleado = h.IdEmpleado
-INNER JOIN Servicios s ON e.IdServicio = s.IdServicio
-WHERE h.Activo = 1 AND e.IdRol = 2;
-
--------------------- EJEMPLOS VISTA_TURNOS_DISPONIBLES:
-
--- pido todos los datos de la vista
--- SELECT * FROM VISTA_TURNOS_DISPONIBLES;
-
--- buscamos disponibilidad para un dia concreto
--- SELECT NombreEmpleado, NombreDia, HoraInicio, HoraFin, NombreServicio, Precio, Duracion
--- FROM VISTA_TURNOS_DISPONIBLES 
--- WHERE NombreDia = 'Martes'
--- AND HoraFin = '17:00'
--- ORDER BY HoraInicio;
-
------------------------------------------------------------
-
-
--- VISTA 3 VISTA_SERVICIOS:
-
--------------------- EJEMPLOS VISTA_SERVICIOS:
-
-
-
------------------------------------------------------------
-
--- VISTA 4 VISTA_HORARIO_EMPLEADOS:
+-- VISTA 4 VW_HORARIO_EMPLEADOS:
 -- Vista de gestión de recursos humanos para optimizar horarios y cargas de trabajo de empleados. 
 -- Mapea la disponibilidad semanal de cada empleado y correlaciona horarios definidos con carga real de trabajo mediante el conteo de turnos por día. 
 -- Los usuarios objetivo son administradores y gestores de personal.
 -- Caso de uso: Identifica empleados con baja ocupación para asignar más turnos, detecta sobrecarga de trabajo y planificar horarios semanales según demanda.
 
-CREATE VIEW VISTA_HORARIO_EMPLEADOS AS
+CREATE VIEW VW_HORARIO_EMPLEADOS AS
 SELECT 
     e.IdEmpleado, 
     e.Nombre, 
@@ -85,6 +39,3 @@ GROUP BY e.IdEmpleado, e.Nombre, e.Apellido, s.Categoria, h.DiaSemana, h.HoraIni
 -- FROM VISTA_HORARIO_EMPLEADOS 
 -- WHERE NivelCarga IN ('Sin carga', 'Carga baja')
 -- ORDER BY TurnosDelDia;
-
------------------------------------------------------------
-
